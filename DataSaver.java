@@ -10,10 +10,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.util.List;
+import java.util.ArrayList;
 
 public class DataSaver {
-    public static void saveData(List<Employee> employeeList){
+    public static void saveData(ArrayList<Employee> employeeList){
         /*
 
          */

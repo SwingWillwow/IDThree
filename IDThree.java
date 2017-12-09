@@ -1,5 +1,5 @@
 import java.io.File;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class IDThree {
@@ -10,14 +10,14 @@ public class IDThree {
 //        String path = file.getAbsolutePath();
 //        System.out.println(path);
         //load data from file
-        List<Employee> employeeList = DataLoader.loadData(file);
+        ArrayList<Employee> employeeList = DataLoader.loadData(file);
         runningProgram(employeeList);
         //after operations save data toFile
         DataSaver.saveData(employeeList);
     }
 
     //main program
-    private static void runningProgram(List<Employee> employeeList){
+    private static void runningProgram(ArrayList<Employee> employeeList){
         while(true){
             char c='a';
             Scanner scanner = new Scanner(System.in);
@@ -43,6 +43,7 @@ public class IDThree {
                     break;
                 case 'r':
                     new ID3Util().runIDThreeAlgorithm(employeeList);
+                    new RulePrinter().print();
                     break;
                 default:
                     c='c';//c for continue;
@@ -64,16 +65,16 @@ public class IDThree {
 
 
     //add a new Employee to the list
-    private static List<Employee> addEmployee(List<Employee> employeeList){
+    private static ArrayList<Employee> addEmployee(ArrayList<Employee> employeeList){
 
         return employeeList;
     }
     //delete an employee from the list
-    private static List<Employee> deleteEmployee(List<Employee> employeeList,int id){
+    private static ArrayList<Employee> deleteEmployee(ArrayList<Employee> employeeList,int id){
         return employeeList;
     }
     //show the information of the list
-    private static void showEmployees(List<Employee> employeeList){
+    private static void showEmployees(ArrayList<Employee> employeeList){
         for (Employee anEmployeeList : employeeList) {
             showEmployee(anEmployeeList);
         }

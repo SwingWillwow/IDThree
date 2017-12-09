@@ -6,11 +6,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DataLoader {
     //load data from file
-    public static List<Employee> loadData(File datafile){
+    public static ArrayList<Employee> loadData(File datafile){
         /*
 
          */
