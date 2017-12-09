@@ -4,12 +4,16 @@ import java.util.Scanner;
 
 public class IDThree {
     public static void main(String[] args) {
-        File file = null;
+        //String path = System.getProperties().getProperty("user.dir");
+        //System.out.println(path);
+        File file = new File("employeeData.xml");
+//        String path = file.getAbsolutePath();
+//        System.out.println(path);
         //load data from file
         List<Employee> employeeList = DataLoader.loadData(file);
         runningProgram(employeeList);
         //after operations save data toFile
-        DataLoader.saveData(file);
+        DataSaver.saveData(file);
     }
 
     //main program
@@ -17,11 +21,7 @@ public class IDThree {
         while(true){
             char c='a';
             Scanner scanner = new Scanner(System.in);
-            System.out.println("please input a char to decide what to do next:");
-            System.out.println("input a(means add) to add a new employee.");
-            System.out.println("input d(means delete) to delete an employee form the data source.");
-            System.out.println("input s(means show) to show all the employee in the list.");
-            System.out.println("input r(means run) to run the program to get the decision-making tree.");
+            showMenu();
             String inputStr = scanner.next();
             if(inputStr.length()>1){
                 System.out.println("error input please input again.");
@@ -42,6 +42,7 @@ public class IDThree {
                     showEmployees(employeeList);
                     break;
                 case 'r':
+                    ID3Util.runIDThreeAlgorithm(employeeList);
                     break;
                 default:
                     c='c';//c for continue;
@@ -51,6 +52,14 @@ public class IDThree {
                 System.out.println("error input please input again.");
             }
         }
+    }
+
+    private static void showMenu() {
+        System.out.println("please input a char to decide what to do next:");
+        System.out.println("input a(means add) to add a new employee.");
+        System.out.println("input d(means delete) to delete an employee form the data source.");
+        System.out.println("input s(means show) to show all the employee in the list.");
+        System.out.println("input r(means run) to run the program to get the decision-making tree.");
     }
 
 
@@ -65,6 +74,19 @@ public class IDThree {
     }
     //show the information of the list
     private static void showEmployees(List<Employee> employeeList){
-
+        for (Employee anEmployeeList : employeeList) {
+            showEmployee(anEmployeeList);
+        }
+    }
+    //show information of a single employee
+    private static void showEmployee(Employee e){
+        System.out.println("Id:"+e.getId());
+        System.out.println("EducationLevel:"+e.getEducationLevel());
+        System.out.println("Sex:"+e.getSex());
+        System.out.println("EnglishLevel:"+e.getEnglishLevel());
+        System.out.println("CharacterType:"+e.getCharacterType());
+        System.out.println("PostType:"+e.getPostType());
+        System.out.println("ClassType:"+e.getClassType());
+        System.out.println();
     }
 }
