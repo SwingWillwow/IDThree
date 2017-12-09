@@ -13,7 +13,7 @@ public class IDThree {
         List<Employee> employeeList = DataLoader.loadData(file);
         runningProgram(employeeList);
         //after operations save data toFile
-        DataSaver.saveData(file);
+        DataSaver.saveData(employeeList);
     }
 
     //main program
@@ -42,7 +42,7 @@ public class IDThree {
                     showEmployees(employeeList);
                     break;
                 case 'r':
-                    ID3Util.runIDThreeAlgorithm(employeeList);
+                    new ID3Util().runIDThreeAlgorithm(employeeList);
                     break;
                 default:
                     c='c';//c for continue;
