@@ -36,6 +36,7 @@ public class IDThree {
                     break;
                 case 'd':
                     int id=0;
+                    id = getIdToDelete(employeeList);
                     employeeList=deleteEmployee(employeeList,id);
                     break;
                 case 's':
@@ -66,11 +67,132 @@ public class IDThree {
 
     //add a new Employee to the list
     private static ArrayList<Employee> addEmployee(ArrayList<Employee> employeeList){
-
+        Employee e = new Employee();
+        e.setId(getNewId(employeeList));
+        e.setEducationLevel(getNewEducationLevel());
+        e.setSex(getNewSex());
+        e.setEnglishLevel(getNewEnglishLevel());
+        e.setCharacterType(getNewCharacterType());
+        e.setPostType(getNewPostType());
+        e.setClassType(getNewClassType());
+        employeeList.add(e);
         return employeeList;
+    }
+    private static int getNewId(ArrayList<Employee> employees){
+        System.out.println("please input the id of the new Employee.");
+        int id = getIntSafe();
+        if(isIdExist(employees,id)){
+            System.out.println("id exist! please input again");
+            id = getNewId(employees);
+
+        }
+        return id;
+    }
+    private static char getNewEducationLevel(){
+        System.out.println("please input the education level of the new Employee.");
+        char level = getCharSafe();
+        if(!isEduValid(level)){
+            System.out.println("invalid education level. please input again!");
+            level = getNewEducationLevel();
+        }
+        return level;
+    }
+    private static boolean isEduValid(char edu){
+        return edu == 'M' || edu == 'B' || edu == 'C';
+    }
+    private static char getNewSex(){
+        System.out.println("please input the sex of the new employee.");
+        char sex = getCharSafe();
+        if(!isSexValid(sex)){
+            System.out.println("invalid sex. please input agagin!");
+            sex = getNewSex();
+        }
+        return sex;
+    }
+    private static boolean isSexValid(char sex){
+        return sex=='M'||sex=='F';
+    }
+    private static int getNewEnglishLevel(){
+        System.out.println("please input the english value of the new employee.");
+        int level = getIntSafe();
+        if(!isEngSafe(level)){
+            System.out.println("invalid english level. please input again");
+            level = getNewEnglishLevel();
+        }
+        return level;
+    }
+    private static boolean isEngSafe(int eng){
+        return eng==2||eng==4||eng==6;
+    }
+    private static int getNewCharacterType(){
+        System.out.println("please input the character type of the new employee.");
+        int type = getIntSafe();
+        if(!isTypeSafe(type)){
+            System.out.println("invalid character type. please input again!");
+            type = getNewCharacterType();
+        }
+        return type;
+    }
+    private static boolean isTypeSafe(int type){
+        return type==1||type==2||type==3;
+    }
+    private static int getNewPostType(){
+        System.out.println("please input the post type of the new employee.");
+        int type = getIntSafe();
+        if(!isTypeSafe(type)){
+            System.out.println("invalid character type. please input again!");
+            type = getNewPostType();
+        }
+        return type;
+    }
+    private static char getNewClassType(){
+        System.out.println("please input the class type of the new employee.");
+        char type = getCharSafe();
+        if(!isClassTypeSafe(type)){
+            System.out.println("invalid class type. please input again.");
+            type = getNewClassType();
+        }
+        return type;
+    }
+    private static boolean isClassTypeSafe(char type){
+        return type =='N'||type=='Y';
+    }
+
+
+    private static int getIntSafe(){
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.next();
+        int ret;
+        try {
+            ret = Integer.parseInt(input);
+        }
+        catch (Exception e){
+            System.out.println("please input Integer");
+            ret = getIntSafe();
+        }
+        return ret;
+    }
+    private static char getCharSafe(){
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.next();
+        char ret;
+        if(input.length()!=1){
+            System.out.println("please input character.");
+            ret=getCharSafe();
+        }
+        else {
+            ret = input.charAt(0);
+        }
+        return ret;
     }
     //delete an employee from the list
     private static ArrayList<Employee> deleteEmployee(ArrayList<Employee> employeeList,int id){
+        for(Employee e : employeeList){
+            if(e.getId()==id){
+                employeeList.remove(e);
+                break;
+            }
+        }
         return employeeList;
     }
     //show the information of the list
@@ -89,5 +211,31 @@ public class IDThree {
         System.out.println("PostType:"+e.getPostType());
         System.out.println("ClassType:"+e.getClassType());
         System.out.println();
+    }
+    private static int getIdToDelete(ArrayList<Employee> employees){
+        System.out.println("please input id:");
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.next();
+        int id;
+        try {
+            id = Integer.parseInt(input);
+        }
+        catch (Exception e){
+            System.out.println("please input Integer");
+            id = getIdToDelete(employees);
+        }
+        if(!isIdExist(employees,id)){
+            System.out.println("employee with this id not exist!");
+            System.out.println("please input again.");
+            id = getIdToDelete(employees);
+        }
+        return id;
+
+    }
+    private static boolean isIdExist(ArrayList<Employee> employees,int id){
+        for (Employee e: employees){
+            if( e.getId()==id) return true;
+        }
+        return false;
     }
 }

@@ -30,11 +30,22 @@ public class RulePrinter {
                 value = ((Element) root.item(i)).getAttribute("value");
                 content = root.item(i).getTextContent();
                 if(content.equals("N")||content.equals("Y")){
-                    String newRule = rule + " and " + tagName + " = " + value+" then "+root.item(i).getTextContent();
+                    String newRule;
+                    if(rule.equals("if ")){
+                        newRule= rule + tagName+" = " +value + " then "+root.item(i).getTextContent();
+                    }
+                    else {
+                        newRule = rule + " and " + tagName + " = " + value+" then "+root.item(i).getTextContent();
+                    }
                     System.out.println(newRule);
                 }
                 else {
-                    printXMLTree(root.item(i).getChildNodes(), rule + " and " + tagName + " = " + value);
+                    if(rule.equals("if ")){
+                        printXMLTree(root.item(i).getChildNodes(), rule + tagName + " = " + value);
+                    }
+                    else {
+                        printXMLTree(root.item(i).getChildNodes(), rule + " and " + tagName + " = " + value);
+                    }
                 }
             }
         }

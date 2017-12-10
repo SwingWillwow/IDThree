@@ -11,6 +11,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class ID3Util {
@@ -237,7 +238,7 @@ public class ID3Util {
         for(int i=0;i<5;i++){
             if(visit[i]) continue;
             tmpInformation = countAverageInformation(i,employeeList);
-            //System.out.println(tmpInformation);
+//            System.out.println(tmpInformation);
             if(minInformationEntropy > tmpInformation){
                 minInformationEntropy = tmpInformation;
                 index = i;
@@ -255,6 +256,8 @@ public class ID3Util {
         Double [] entropy = new Double[3];
         for(int i=0;i<subsetOfEmList.size();i++){
             entropy[i] = countEntropy(subsetOfEmList.get(i));
+//            System.out.println(entropy[i]);
+//            System.out.println();
             avgInformation += (subsetOfEmList.get(i).size()/elemNum)*entropy[i];
         }
 
