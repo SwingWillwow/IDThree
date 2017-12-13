@@ -20,17 +20,23 @@ public class ID3Util {
     //用于保存数据的内部类
     private class ID3Node{
         private ArrayList<Employee> employees;
-        private int index;
-        ID3Node(ArrayList<Employee> employees,int index){
+        private int parentId;
+        private int id;
+        private boolean [] visit = new boolean[5];
+        ID3Node(ArrayList<Employee> employees,int parentId,boolean [] visit){
             this.employees = employees;
-            this.index = index;
+            this.parentId = parentId;
+            this.visit = visit;
         }
-        public int getIndex() {
-            return index;
+        ID3Node(){
+
+        }
+        public int getParentId() {
+            return parentId;
         }
 
-        public void setIndex(int index) {
-            this.index = index;
+        public void setParentId(int parentId) {
+            this.parentId = parentId;
         }
 
         public ArrayList<Employee> getEmployees() {
@@ -40,8 +46,25 @@ public class ID3Util {
         public void setEmployees(ArrayList<Employee> employees) {
             this.employees = employees;
         }
+
+        public boolean[] getVisit() {
+            return visit;
+        }
+
+        public void setVisit(boolean[] visit) {
+            for(int i=0;i<5;i++){
+                this.visit[i]=visit[i];
+            }
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
     }
-    private boolean [] visit = new boolean[5];
     public static void main(String[] args) {
 //        ID3Util util = new ID3Util();
 //        Double d1 = 2.0/5;
@@ -67,6 +90,7 @@ public class ID3Util {
     private DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
     private DocumentBuilder builder;
     private Document document;
+    private int id;
     public void runIDThreeAlgorithm(ArrayList<Employee> employeeList){
         //初始化xml document
         try {
@@ -75,33 +99,41 @@ public class ID3Util {
         }catch (Exception e){
             e.printStackTrace();
         }
-        LinkedList<ID3Node> newQueue = new LinkedList<>();
-        ID3Node node = new ID3Node(employeeList,-1);
-        newQueue.offer(node);
+        id =1;
         buildRootNode();
+        LinkedList<ID3Node> newQueue = new LinkedList<>();
+        ID3Node node = new ID3Node(employeeList,1,new boolean[5]);
+        node.setId(id++);
+        newQueue.offer(node);
         while(newQueue.peek()!=null){
             //数据初始化
             ID3Node currentNode = newQueue.poll();
             ArrayList<Employee> currentSet=currentNode.getEmployees();
-            int parentIndex = currentNode.getIndex();
+            int parentId = currentNode.getParentId();
+            boolean [] visit = currentNode.getVisit();
             //判断是否叶节点
             if(isLeafNode(currentSet)){
-                buildLeafNode(parentIndex,currentSet);
+                buildLeafNode(currentNode.getId(),currentSet);
                 continue;
             }
             //已经没有可用属性
-            if(!isMoreAttr()){
+            if(!isMoreAttr(visit)){
                 printError();
-                break;
+                return;
             }
-            int index = selectAttr(currentSet);
+            int index = selectAttr(currentSet,visit);
             //System.out.println(index);
             ArrayList<ArrayList<Employee>> subsets = getSubset(index,currentSet);
             for (ArrayList<Employee> subset : subsets) {
-                ID3Node tmpNode = new ID3Node(subset,index);
+                ID3Node tmpNode = new ID3Node();
+                tmpNode.setEmployees(subset);
+                tmpNode.setParentId(currentNode.getId());
+                tmpNode.setId(id++);
+                visit[index]=true;
+                tmpNode.setVisit(visit);
                 newQueue.offer(tmpNode);
             }
-            buildNonLeafNode(subsets,parentIndex,index);
+            buildNonLeafNode(subsets,currentNode.getId(),index);
         }
         printXMLTree();
         printSuccess();
@@ -124,45 +156,27 @@ public class ID3Util {
     //构造根节点
     private void buildRootNode(){
         Element root = document.createElement("decisionTree");
+        root.setAttribute("id",Integer.toString(id));
+        root.setIdAttribute("id",true);
         document.appendChild(root);
     }
     //构造叶子节点
-    private void buildLeafNode(int parentIndex,ArrayList<Employee> employees){
-        String parentTagName = getTagName(parentIndex);
-        String nodeValue = getValueByIndex(employees.get(0),parentIndex);
-        NodeList list = document.getElementsByTagName(parentTagName);
-        for(int i=0;i<list.getLength();i++){
-            if(list.item(i).getAttributes().getNamedItem("value").getNodeValue().equals(nodeValue)){
-                Node node = list.item(i);
-                String classType = Character.toString(employees.get(0).getClassType());
-                node.setTextContent(classType);
-                break;
-            }
-        }
+    private void buildLeafNode(int id,ArrayList<Employee> employees){
+        Node node = document.getElementById(Integer.toString(id));
+        String classType = Character.toString(employees.get(0).getClassType());
+        node.setTextContent(classType);
     }
     //构造非叶节点
-    private void buildNonLeafNode(ArrayList<ArrayList<Employee>> subsets,int parentIndex,int index){
-        String parentTagName = getTagName(parentIndex);
+    private void buildNonLeafNode(ArrayList<ArrayList<Employee>> subsets,int currentId,int index){
         String tagName = getTagName(index);
-        NodeList nodeList = document.getElementsByTagName(parentTagName);
-        Node node = null;
-        if(parentTagName.equals("decisionTree")){
-            node = nodeList.item(0);
-
-        }
-        else {
-            for(int i=0;i<nodeList.getLength();i++){
-                String nodeValue = nodeList.item(i).getAttributes().getNamedItem("value").getNodeValue();
-                if(nodeValue.equals(getValueByIndex(subsets.get(0).get(0),parentIndex))){
-                    node = nodeList.item(i);
-                    break;
-                }
-            }
-        }
+        Node node = document.getElementById(Integer.toString(currentId));
+        int tmpId = id - subsets.size();
         for(ArrayList<Employee> subset:subsets){
             String value = getValueByIndex(subset.get(0),index);
             Element elem = document.createElement(tagName);
             elem.setAttribute("value",value);
+            elem.setAttribute("id",Integer.toString(tmpId++));
+            elem.setIdAttribute("id",true);
             node.appendChild(elem);
         }
     }
@@ -212,7 +226,7 @@ public class ID3Util {
         System.out.println();
     }
     //判断有没有可用属性
-    private boolean isMoreAttr(){
+    private boolean isMoreAttr(boolean [] visit){
         for(int i=0;i<4;i++){
             if(!visit[i]){
                 return true;
@@ -231,7 +245,7 @@ public class ID3Util {
         return true;
     }
     //选择划分属性
-    private int selectAttr(ArrayList<Employee> employeeList){
+    private int selectAttr(ArrayList<Employee> employeeList,boolean visit[]){
         int index = -2;
         Double minInformationEntropy = 100.00;
         Double tmpInformation;
@@ -244,7 +258,6 @@ public class ID3Util {
                 index = i;
             }
         }
-        if(index != -2)visit[index]=true;
         return index;
     }
     //计算某一属性值的平均信息量

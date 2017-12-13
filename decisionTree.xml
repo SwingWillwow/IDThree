@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<decisionTree>
-    <postType value="1">
-        <englishLevel value="2">N</englishLevel>
-        <englishLevel value="4">Y</englishLevel>
-        <englishLevel value="6">
-            <educationLevel value="B">N</educationLevel>
-            <educationLevel value="M">Y</educationLevel>
-        </englishLevel>
+<decisionTree id="1">
+    <postType id="2" value="1">
+        <englishLevel id="5" value="2">N</englishLevel>
+        <englishLevel id="6" value="4">Y</englishLevel>
+        <englishLevel id="7" value="6">N</englishLevel>
     </postType>
-    <postType value="2">Y</postType>
-    <postType value="3">
-        <characterType value="1">
-            <sex value="M">N</sex>
-            <sex value="F">Y</sex>
+    <postType id="3" value="2">Y</postType>
+    <postType id="4" value="3">
+        <characterType id="8" value="1">
+            <educationLevel id="11" value="B">Y</educationLevel>
+            <educationLevel id="12" value="M">N</educationLevel>
         </characterType>
-        <characterType value="2">N</characterType>
-        <characterType value="3">Y</characterType>
+        <characterType id="9" value="2">N</characterType>
+        <characterType id="10" value="3">Y</characterType>
     </postType>
 </decisionTree>

@@ -30,7 +30,7 @@
     <employee>
         <id>4</id>
         <educationLevel>B</educationLevel>
-        <sex>F</sex>
+        <sex>M</sex>
         <englishLevel>4</englishLevel>
         <characterType>1</characterType>
         <postType>3</postType>
